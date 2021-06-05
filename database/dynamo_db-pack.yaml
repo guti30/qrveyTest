@@ -1,0 +1,26 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Dynamo backend serverless application Accounts Domain
+Resources:
+  MarvelTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName:
+        Fn::Sub: ${AWS::StackName}-marvel_table
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      KeySchema:
+      - KeyType: HASH
+        AttributeName: id
+Outputs:
+  MarvelDevTableArn:
+    Description: Marvel Table Arn
+    Value:
+      Fn::GetAtt:
+      - MarvelTable
+      - Arn
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-MarvelTable
