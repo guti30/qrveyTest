@@ -91,11 +91,11 @@ export async function postDynamoHandler(event: any): Promise<APIGatewayProxyResu
 }
 
 /**
- * @name patchDynamoHandler
+ * @name updateDynamoHandler
  * @param body Even
- * @description Update an element in Dynamo
+ * @description Update a record in Dynamo
  */
- export async function patchDynamoHandler(event: any): Promise<APIGatewayProxyResult> {
+ export async function updateDynamoHandler(event: any): Promise<APIGatewayProxyResult> {
     let body = JSON.parse(event.body);
     let response: APIGatewayProxyResult = {
         statusCode: 500,

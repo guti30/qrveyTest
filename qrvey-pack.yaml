@@ -44,7 +44,7 @@ Resources:
   PostDynamoDB:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://test-qrvey-bucket/594655123bde4ae6cbc03a9d93b8be7a
+      CodeUri: s3://test-qrvey-bucket/6d3bab60187eed0af95e3b214bdba337
       Description: Put a record in the database
       Handler: dynamoFunctions/src/main/services/dynamoFunctions.postDynamoHandler
       Role:
@@ -64,7 +64,7 @@ Resources:
   GetDynamoDB:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://test-qrvey-bucket/594655123bde4ae6cbc03a9d93b8be7a
+      CodeUri: s3://test-qrvey-bucket/6d3bab60187eed0af95e3b214bdba337
       Description: Consult a record ement in Dynamo
       Handler: dynamoFunctions/src/main/services/dynamoFunctions.getDynamoHandler
       Role:
@@ -84,7 +84,7 @@ Resources:
   DeleteDynamoDB:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://test-qrvey-bucket/594655123bde4ae6cbc03a9d93b8be7a
+      CodeUri: s3://test-qrvey-bucket/6d3bab60187eed0af95e3b214bdba337
       Description: Delete a record in the database
       Handler: dynamoFunctions/src/main/services/dynamoFunctions.deleteDynamoHandler
       Role:
@@ -101,12 +101,12 @@ Resources:
             Method: DELETE
             RestApiId:
               Ref: ApiGateway
-  PatchDynamoDB:
+  UpdateDynamoDB:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://test-qrvey-bucket/594655123bde4ae6cbc03a9d93b8be7a
+      CodeUri: s3://test-qrvey-bucket/6d3bab60187eed0af95e3b214bdba337
       Description: Update a record in the database
-      Handler: dynamoFunctions/src/main/services/dynamoFunctions.patchDynamoHandler
+      Handler: dynamoFunctions/src/main/services/dynamoFunctions.updateDynamoHandler
       Role:
         Fn::GetAtt:
         - QrveyLambdaIAMRole
@@ -118,13 +118,13 @@ Resources:
           Type: Api
           Properties:
             Path: /record
-            Method: PATCH
+            Method: PUT
             RestApiId:
               Ref: ApiGateway
   GetAllDynamoDB:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://test-qrvey-bucket/594655123bde4ae6cbc03a9d93b8be7a
+      CodeUri: s3://test-qrvey-bucket/6d3bab60187eed0af95e3b214bdba337
       Description: Get all records in the database
       Handler: dynamoFunctions/src/main/services/dynamoFunctions.getAllInfoDynamoHandler
       Role:
