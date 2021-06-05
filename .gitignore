@@ -1,3 +1,5 @@
 node_modules/
 coverage/
 dist/
+database/dynamo_db-pack.yaml
+qrvey-pack.yaml
