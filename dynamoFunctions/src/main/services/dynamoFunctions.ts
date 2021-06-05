@@ -27,7 +27,7 @@ export async function postDynamoHandler(event: any): Promise<APIGatewayProxyResu
     try {
         const dynamoRecord: any = await dbHandler.putRecord(TABLE_NAME,body);
         response.statusCode = RESPONSE_TYPES.OK;
-        response.body = RESPONSE_TYPES.SUCCESS;
+        response.body = "id: "+uid;
         
     } catch (err) {
         console.log(err);
@@ -80,7 +80,7 @@ export async function postDynamoHandler(event: any): Promise<APIGatewayProxyResu
         console.log("[LAMBDA_EVENT]- get ", id);
         const dynamoRecord: any = await dbHandler.deleteRecord(TABLE_NAME,id);
         response.statusCode = RESPONSE_TYPES.OK;
-        response.body =JSON.stringify(dynamoRecord);
+        response.body = "The record was delete";
         
     } catch (err) {
         console.log(err);
@@ -106,7 +106,7 @@ export async function postDynamoHandler(event: any): Promise<APIGatewayProxyResu
     try {
         const dynamoRecord: any = await dbHandler.putRecord(TABLE_NAME,body);
         response.statusCode = RESPONSE_TYPES.OK;
-        response.body =JSON.stringify(dynamoRecord);
+        response.body = "The record was update";
     } catch (err) {
         console.log(err);
         response.body = JSON.stringify(err);
