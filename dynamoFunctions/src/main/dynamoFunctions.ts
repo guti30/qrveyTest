@@ -1,7 +1,6 @@
-import { ResponseModel } from '../models/models';
-import * as RESPONSE_TYPES from '../types/responseTypes';
-import *  as dbHandler from '../../../../common/src/main/db/commonDb';
-import { DB_VARIABLES,LAMBDA_VARIABLES } from '../../../../common/src/main/util/dbConfigurations';
+import * as RESPONSE_TYPES from '../../../common/src/main/types/responseTypes';
+import *  as dbHandler from '../../../common/src/main/db/commonDb';
+import { DB_VARIABLES,LAMBDA_VARIABLES } from '../../../common/src/main/util/dbConfigurations';
 import {APIGatewayProxyResult} from "aws-lambda";
 
 const UUID = require('uuid');
@@ -14,17 +13,16 @@ const TABLE_NAME = DB_VARIABLES.tableName;
  * @description Insert a element in Dynamo
  */
 export async function postDynamoHandler(event: any): Promise<APIGatewayProxyResult> {
-    let body = JSON.parse(event.body);
-    console.log(body);
-    let uid = UUID.v4();
-    body.id = uid; 
     let response: APIGatewayProxyResult = {
         statusCode: 500,
         body: "",
         headers: LAMBDA_VARIABLES.LAMBDA_RESPONSE_HEADERS
     }
-    console.log("[LAMBDA_EVENT]- post", body);
     try {
+        let body = JSON.parse(event.body);
+        console.log(body);
+        let uid = UUID.v4();
+        body.id = uid; 
         const dynamoRecord: any = await dbHandler.putRecord(TABLE_NAME,body);
         response.statusCode = RESPONSE_TYPES.OK;
         response.body = "id: "+uid;
@@ -74,8 +72,8 @@ export async function postDynamoHandler(event: any): Promise<APIGatewayProxyResu
         body: "",
         headers: LAMBDA_VARIABLES.LAMBDA_RESPONSE_HEADERS
     }
-    console.log("[LAMBDA_EVENT]- delete ", body.pathParameters);
     try {
+        console.log("[LAMBDA_EVENT]- delete ", body.pathParameters);
         let id = body.pathParameters.id;
         console.log("[LAMBDA_EVENT]- get ", id);
         const dynamoRecord: any = await dbHandler.deleteRecord(TABLE_NAME,id);
@@ -91,20 +89,21 @@ export async function postDynamoHandler(event: any): Promise<APIGatewayProxyResu
 }
 
 /**
- * @name updateDynamoHandler
+ * @name patchDynamoHandler
  * @param body Even
  * @description Update a record in Dynamo
  */
- export async function updateDynamoHandler(event: any): Promise<APIGatewayProxyResult> {
-    let body = JSON.parse(event.body);
+ export async function patchDynamoHandler(event: any): Promise<APIGatewayProxyResult> {
     let response: APIGatewayProxyResult = {
         statusCode: 500,
         body: "",
         headers: LAMBDA_VARIABLES.LAMBDA_RESPONSE_HEADERS
     }
-    console.log("[LAMBDA_EVENT]- patch ", body);
+    
     try {
-        const dynamoRecord: any = await dbHandler.putRecord(TABLE_NAME,body);
+        let body = JSON.parse(event.body);
+        console.log("[LAMBDA_EVENT]- patch ", body);
+        const dynamoRecord: any = await dbHandler.patchRecord(body);
         response.statusCode = RESPONSE_TYPES.OK;
         response.body = "The record was update";
     } catch (err) {
