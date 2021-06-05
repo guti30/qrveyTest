@@ -1,0 +1,136 @@
+
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: qrvey backend
+        
+Resources:
+    QrveyLambdaIAMRole:     
+        Type: AWS::IAM::Role
+        Properties:
+            RoleName: !Sub "${AWS::StackName}-QrveyLambda" 
+            AssumeRolePolicyDocument:
+                Version: '2012-10-17'
+                Statement:
+                    -
+                        Effect: Allow
+                        Principal:
+                            Service:
+                                - 'lambda.amazonaws.com'                             
+                        Action:
+                            - 'sts:AssumeRole'
+            Policies:
+                -
+                    PolicyName: !Sub "${AWS::StackName}-QrveyLambdaIAMPolicy"
+                    PolicyDocument:
+                        Version: '2012-10-17'
+                        Statement:
+                            -
+                                Effect: Allow
+                                Action:
+                                    - logs:*
+                                    - dynamodb:*
+                                    - autoscaling:CompleteLifecycleAction
+                                    - lambda:*
+                                    - s3:*                
+                                Resource: "*"                                                                                
+    
+    ApiGateway:
+        Type: "AWS::Serverless::Api"
+        Properties:
+            Name: !Sub "${AWS::StackName}"
+            StageName: Develop
+            Variables:
+                ApiGateway: !Ref ApiGateway
+                region: !Ref AWS::Region
+
+
+    PostDynamoDB:
+        Type: 'AWS::Serverless::Function'
+        Properties:
+            CodeUri: dist/
+            Description: 'Put a record in the database'
+            Handler: dynamoFunctions/src/main/services/dynamoFunctions.postDynamoHandler
+            Role: !GetAtt QrveyLambdaIAMRole.Arn
+            Runtime: nodejs12.x
+            Timeout: 10
+            Events:
+                PostDynamoDBEndPointHTTP:
+                    Type: Api
+                    Properties:
+                        Path: /record
+                        Method: POST   
+                        RestApiId: !Ref ApiGateway         
+ 
+    GetDynamoDB:
+        Type: 'AWS::Serverless::Function'
+        Properties:
+            CodeUri: dist/
+            Description: 'Consult a record ement in Dynamo'
+            Handler: dynamoFunctions/src/main/services/dynamoFunctions.getDynamoHandler
+            Role: !GetAtt QrveyLambdaIAMRole.Arn
+            Runtime: nodejs12.x
+            Timeout: 10
+            Events:
+                GetDynamoDBEndPointHTTP:
+                    Type: Api
+                    Properties:
+                        Path: /record/{id}
+                        Method: GET   
+                        RestApiId: !Ref ApiGateway         
+          
+    DeleteDynamoDB:
+        Type: 'AWS::Serverless::Function'
+        Properties:
+            CodeUri: dist/
+            Description: 'Delete a record in the database'
+            Handler: dynamoFunctions/src/main/services/dynamoFunctions.deleteDynamoHandler
+            Role: !GetAtt QrveyLambdaIAMRole.Arn
+            Runtime: nodejs12.x
+            Timeout: 10
+            Events:
+                PostDynamoDBEndPointHTTP:
+                    Type: Api
+                    Properties:
+                        Path: /record/{id}
+                        Method: DELETE   
+                        RestApiId: !Ref ApiGateway         
+                       
+    PatchDynamoDB:
+        Type: 'AWS::Serverless::Function'
+        Properties:
+            CodeUri: dist/
+            Description: 'Update a record in the database'
+            Handler: dynamoFunctions/src/main/services/dynamoFunctions.patchDynamoHandler
+            Role: !GetAtt QrveyLambdaIAMRole.Arn
+            Runtime: nodejs12.x
+            Timeout: 10
+            Events:
+                PostDynamoDBEndPointHTTP:
+                    Type: Api
+                    Properties:
+                        Path: /record
+                        Method: PATCH   
+                        RestApiId: !Ref ApiGateway         
+                       
+    GetAllDynamoDB:
+        Type: 'AWS::Serverless::Function'
+        Properties:
+            CodeUri: dist/
+            Description: 'Get all records in the database'
+            Handler: dynamoFunctions/src/main/services/dynamoFunctions.getAllInfoDynamoHandler
+            Role: !GetAtt QrveyLambdaIAMRole.Arn
+            Runtime: nodejs12.x
+            Timeout: 10
+            Events:
+                PostDynamoDBEndPointHTTP:
+                    Type: Api
+                    Properties:
+                        Path: /allRecords
+                        Method: GET   
+                        RestApiId: !Ref ApiGateway         
+                                               
+                                                                         
+
+
+   
+

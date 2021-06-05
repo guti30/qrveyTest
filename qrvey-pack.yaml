@@ -1,0 +1,143 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: qrvey backend
+Resources:
+  QrveyLambdaIAMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName:
+        Fn::Sub: ${AWS::StackName}-QrveyLambda
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Policies:
+      - PolicyName:
+          Fn::Sub: ${AWS::StackName}-QrveyLambdaIAMPolicy
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - logs:*
+            - dynamodb:*
+            - autoscaling:CompleteLifecycleAction
+            - lambda:*
+            - s3:*
+            Resource: '*'
+  ApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name:
+        Fn::Sub: ${AWS::StackName}
+      StageName: Develop
+      Variables:
+        ApiGateway:
+          Ref: ApiGateway
+        region:
+          Ref: AWS::Region
+  PostDynamoDB:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://test-qrvey-bucket/594655123bde4ae6cbc03a9d93b8be7a
+      Description: Put a record in the database
+      Handler: dynamoFunctions/src/main/services/dynamoFunctions.postDynamoHandler
+      Role:
+        Fn::GetAtt:
+        - QrveyLambdaIAMRole
+        - Arn
+      Runtime: nodejs12.x
+      Timeout: 10
+      Events:
+        PostDynamoDBEndPointHTTP:
+          Type: Api
+          Properties:
+            Path: /record
+            Method: POST
+            RestApiId:
+              Ref: ApiGateway
+  GetDynamoDB:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://test-qrvey-bucket/594655123bde4ae6cbc03a9d93b8be7a
+      Description: Consult a record ement in Dynamo
+      Handler: dynamoFunctions/src/main/services/dynamoFunctions.getDynamoHandler
+      Role:
+        Fn::GetAtt:
+        - QrveyLambdaIAMRole
+        - Arn
+      Runtime: nodejs12.x
+      Timeout: 10
+      Events:
+        GetDynamoDBEndPointHTTP:
+          Type: Api
+          Properties:
+            Path: /record/{id}
+            Method: GET
+            RestApiId:
+              Ref: ApiGateway
+  DeleteDynamoDB:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://test-qrvey-bucket/594655123bde4ae6cbc03a9d93b8be7a
+      Description: Delete a record in the database
+      Handler: dynamoFunctions/src/main/services/dynamoFunctions.deleteDynamoHandler
+      Role:
+        Fn::GetAtt:
+        - QrveyLambdaIAMRole
+        - Arn
+      Runtime: nodejs12.x
+      Timeout: 10
+      Events:
+        PostDynamoDBEndPointHTTP:
+          Type: Api
+          Properties:
+            Path: /record/{id}
+            Method: DELETE
+            RestApiId:
+              Ref: ApiGateway
+  PatchDynamoDB:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://test-qrvey-bucket/594655123bde4ae6cbc03a9d93b8be7a
+      Description: Update a record in the database
+      Handler: dynamoFunctions/src/main/services/dynamoFunctions.patchDynamoHandler
+      Role:
+        Fn::GetAtt:
+        - QrveyLambdaIAMRole
+        - Arn
+      Runtime: nodejs12.x
+      Timeout: 10
+      Events:
+        PostDynamoDBEndPointHTTP:
+          Type: Api
+          Properties:
+            Path: /record
+            Method: PATCH
+            RestApiId:
+              Ref: ApiGateway
+  GetAllDynamoDB:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://test-qrvey-bucket/594655123bde4ae6cbc03a9d93b8be7a
+      Description: Get all records in the database
+      Handler: dynamoFunctions/src/main/services/dynamoFunctions.getAllInfoDynamoHandler
+      Role:
+        Fn::GetAtt:
+        - QrveyLambdaIAMRole
+        - Arn
+      Runtime: nodejs12.x
+      Timeout: 10
+      Events:
+        PostDynamoDBEndPointHTTP:
+          Type: Api
+          Properties:
+            Path: /allRecords
+            Method: GET
+            RestApiId:
+              Ref: ApiGateway
