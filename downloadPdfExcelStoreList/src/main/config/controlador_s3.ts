@@ -1,6 +1,5 @@
 import * as AWS from 'aws-sdk';
-import { ResponseModel } from '../models/models';
-import  * as RESPONSE_TYPES  from '../types/responseTypes';
+import  * as RESPONSE_TYPES  from '../../../../common/src/main/types/responseTypes';
 
 /**
  * @name S3Controller
@@ -22,20 +21,19 @@ class S3Controller {
      * @param {string} key - key
      * @returns {Promise}
      */
-    public async getObject(bucket: string, key: string): Promise<ResponseModel> {
-        let response: ResponseModel, parameters: any, data: any, statusCode: number, status: string;
+    public async getObject(bucket: string, key: string): Promise<any> {
+        let response: any, parameters: any, data: any, statusCode: number, status: string;
         try {
             parameters = { Bucket: bucket, Key: key };
             data = await this.S3.getObject(parameters).promise();
             statusCode = RESPONSE_TYPES.OK;
             status = RESPONSE_TYPES.SUCCESS;
-            response = new ResponseModel();
-            response.setResponse(statusCode,true, status, data.Body);
+            response = {"code":statusCode, "status": status, "body":data.Body};
             return (response);
         } catch (error) {
             let errorMessage: string = "[S3_CONTROLLER][GET_OBJECT] - Error";
-            let errorResponse: ResponseModel = new ResponseModel();
-            errorResponse.setResponse(RESPONSE_TYPES.NOT_FOUND,false,errorMessage);
+            let errorResponse: any;
+            errorResponse = {"code":RESPONSE_TYPES.NOT_FOUND, "status": errorMessage};
             console.log(errorMessage, error);
             return (errorResponse);
         }

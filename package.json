@@ -17,7 +17,8 @@
   "author": "DreamCode S.A.S",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.778.0"
+    "aws-sdk": "^2.778.0",
+    "json-2-csv": "^3.14.0"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.64",

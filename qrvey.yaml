@@ -127,7 +127,24 @@ Resources:
                     Properties:
                         Path: /allRecords
                         Method: GET   
-                        RestApiId: !Ref ApiGateway         
+                        RestApiId: !Ref ApiGateway     
+
+    DownloadPdfExcelStoreList:
+        Type: 'AWS::Serverless::Function'
+        Properties:
+            CodeUri: dist/
+            Description: 'Get all records in the database and convert into csv and pdf and return'
+            Handler: downloadPdfExcelStoreList/src/main/services/downloadPdfExcelStoreList.downloadPdfExcelStoreListHandler
+            Role: !GetAtt QrveyLambdaIAMRole.Arn
+            Runtime: nodejs12.x
+            Timeout: 10
+            Events:
+                PostDynamoDBEndPointHTTP:
+                    Type: Api
+                    Properties:
+                        Path: /downloadPdfCsv
+                        Method: GET   
+                        RestApiId: !Ref ApiGateway 
                                                
                                                                          
 
