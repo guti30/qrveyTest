@@ -55,4 +55,4 @@ Please run this comands in your comand line
     5.2 go back to the "app" directory and execute the shell "pack" to compile the .ts files under "src" folder and generate the .js files on "dist" folder. This shell will generate and upload the .zip file containing the application logic, then execute "depl" shell to deploy the artifact already in the cloud.
 
 
-6. You can test if the lambda functions were well deployed using the follow PostMan collection "https://www.getpostman.com/collections/fea6c4c749a90e47664b".
+6. You can test if the lambda functions were well deployed using the follow PostMan collection "https://www.getpostman.com/collections/a929a1ff5d55f82e7f63".
