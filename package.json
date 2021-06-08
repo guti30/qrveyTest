@@ -19,6 +19,7 @@
   "dependencies": {
     "aws-sdk": "^2.778.0",
     "json-2-csv": "^3.14.0",
+    "jspdf": "^2.3.1",
     "uuidv4": "^6.2.8"
   },
   "devDependencies": {
