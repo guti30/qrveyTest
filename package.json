@@ -53,12 +53,15 @@
     },
     "coveragePathIgnorePatterns": [
       "/node_modules/",
-      "/test/"
+      "/test/",
+      "common/src/main/db",
+      "downloadPdfExcelStoreList/src/main/s3Config"
     ],
     "collectCoverageFrom": [
-      "**/src/main/*.ts",
-      "**/src/main/**/*.ts",
-      "**/src/main/**/**/*.ts"
+      "**/src/main/downloadPdfExcelStoreList.ts",
+      "**/src/main/dynamoFunctions.ts",
+      "**/src/main/util",
+      "**/src/main/types"
     ],
     "coverageReporters": [
       "json",
