@@ -1,24 +1,25 @@
 {
-  "name": "cargararchivoprecaso",
+  "name": "qrveytest",
   "version": "1.0.0",
-  "description": "This project contains source code and supporting files for a serverless application that you can deploy with the Terraform.",
+  "description": "This project contains source code and supporting files for a serverless application that you can deploy with CloudFormation.",
   "scripts": {
     "clean": "rimraf dist",
     "createBucket": "aws s3api create-bucket --bucket test-qrvey-bucket --region us-east-1",
     "packDB": "cd database/ && npm run-script build && sam package --s3-bucket test-qrvey-bucket --template-file dynamo_db.yaml --output-template-file dynamo_db-pack.yaml",
     "deplDB": "cd database/ && sam deploy --template-file dynamo_db-pack.yaml --stack-name test-qrvey-db --region us-east-1 --capabilities CAPABILITY_NAMED_IAM",
     "pack": "npm run-script build && sam package --s3-bucket test-qrvey-bucket --template-file qrvey.yaml --output-template-file qrvey-pack.yaml",
+    "postbuild": "(cp package.json dist/package.json && cd dist && npm install --only=production)",
     "depl": "sam deploy --template-file  qrvey-pack.yaml --s3-bucket test-qrvey-bucket --stack-name test-qrvey --region us-east-1 --capabilities CAPABILITY_NAMED_IAM --no-fail-on-empty-changeset",
     "build": "npm run clean && tsc -p .",
-    "postbuild": "cp package.json dist/package.json && cd dist && npm install --only=production",
     "test": "jest",
     "test:coverage": "jest --coverage"
   },
-  "author": "DreamCode S.A.S",
+  "author": "Daniel Gutierrez",
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.778.0",
-    "json-2-csv": "^3.14.0"
+    "json-2-csv": "^3.14.0",
+    "uuidv4": "^6.2.8"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.64",

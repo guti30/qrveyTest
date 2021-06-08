@@ -2,9 +2,12 @@ import * as RESPONSE_TYPES from '../../../common/src/main/types/responseTypes';
 import *  as dbHandler from '../../../common/src/main/db/commonDb';
 import { DB_VARIABLES,LAMBDA_VARIABLES } from '../../../common/src/main/util/dbConfigurations';
 import {APIGatewayProxyResult} from "aws-lambda";
+import { uuid } from 'uuidv4';
 
-const UUID = require('uuid');
+
+
 const TABLE_NAME = DB_VARIABLES.tableName;
+
 
 
 /**
@@ -21,7 +24,8 @@ export async function postDynamoHandler(event: any): Promise<APIGatewayProxyResu
     try {
         let body = JSON.parse(event.body);
         console.log(body);
-        let uid = UUID.v4();
+        let uid = uuid();
+        console.log(uid);
         body.id = uid; 
         const dynamoRecord: any = await dbHandler.putRecord(TABLE_NAME,body);
         response.statusCode = RESPONSE_TYPES.OK;

@@ -3,6 +3,10 @@ export const DB_VARIABLES = {
     
 }
 
+export const S3_VARIABLES ={
+    s3Name: "test-qrvey-bucket"
+}
+
 export const LAMBDA_VARIABLES ={
     LAMBDA_RESPONSE_HEADERS: {
         'Content-Type': 'application/json',
